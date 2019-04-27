@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
 import {Row, Col , Pagination , PaginationItem , PaginationLink ,  Button , Modal , ModalBody, ModalFooter, ModalHeader , Card , CardBody, CardHeader, Table } from 'reactstrap';
 import instance from '../../../axios-config';
 import store from '../../../store';
+import { Redirect } from 'react-router';
 class EmployeesTab extends Component {
   constructor(props){
     super(props);
@@ -39,6 +39,10 @@ class EmployeesTab extends Component {
       paginateNextClass:'',
       paginatePrevClass:'',
       togglePaginationClass:'show-pagintaion',
+      profileRedirect:{
+        id:'',
+        redirect:false
+      },
 
     }
   }
@@ -167,19 +171,23 @@ class EmployeesTab extends Component {
       })
 
   }
-  toggle(i) {
-    const newArray = this.state.tooltipOpen.map((element, index) => {
-      return (index === i ? !element : false);
-    });
-    this.setState({
-      tooltipOpen: newArray,
-    });
+  openProfilePage(event){
+    let idEmployee = event.target.getAttribute('data-id');
+    let profileRedirect={
+      id:idEmployee,
+      redirect:true
+    };
+    this.setState({profileRedirect:profileRedirect});
+    this.toggleProfileModal();
   }
   componentDidMount(){
     this.fetchEmployees(1,this.props.limit);
   }
   render() {
     let i =0;
+    if(this.state.profileRedirect.redirect){
+      return (<Redirect to={'/employees/'+this.state.profileRedirect.id}/>);
+    }
     return (
             <Card>
               <CardHeader>
@@ -278,7 +286,7 @@ class EmployeesTab extends Component {
                   </Row>
                 </ModalBody>
                 <ModalFooter>
-                  <Button color="primary" onClick={()=>this.toggleProfileModal()}>Просмотреть профиль</Button>
+                  <Button color="primary"data-id={this.state.profileInfos.id} onClick={(event)=>this.openProfilePage(event)}>Просмотреть профиль</Button>
                   <Button color="danger" data-id={this.state.profileInfos.id} onClick={(event)=>this.openModal(event,'delete')}>Удалить</Button>
                   <Button color="secondary" onClick={()=>this.toggleProfileModal()}>Отменить</Button>
                 </ModalFooter>

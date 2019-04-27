@@ -8,7 +8,7 @@ import logo from '../../assets/img/brand/logo.png'
 
 import {connect} from 'react-redux';
 
-//import * as actionTypes from '../../store/actions';
+import * as actionTypes from '../../store/actions';
 
 
 
@@ -59,12 +59,12 @@ class DefaultHeader extends Component {
         <Nav className="ml-auto" navbar>
           <AppHeaderDropdown direction="down">
             <DropdownToggle nav>
-              <img src={this.state.profileImg} className="img-avatar" alt="admin@bootstrapmaster.com" />
+              <img src={this.state.profileImg} className="img-avatar" alt="profile-img" />
             </DropdownToggle>
             <DropdownMenu right style={{ right: 'auto' }}>
               <DropdownItem header tag="div" className="text-center"><strong>{this.props.user.name+' '+this.props.user.surname}</strong></DropdownItem>
               <DropdownItem><i className="fa fa-user"></i> Профиль</DropdownItem>
-              <DropdownItem href="/logout"><i className="fa fa-lock"></i> Выйти</DropdownItem>
+              <DropdownItem onClick={()=>this.props.onLogout()} ><i className="fa fa-lock"></i> Выйти</DropdownItem>
             </DropdownMenu>
           </AppHeaderDropdown>
         </Nav>
@@ -87,8 +87,7 @@ let mapStateToProps = state => {
 let mapDispatchToProps = dispatch => {
   return {
     onLogout:() => {
-      //dispatch({type:actionTypes.LOGOUT_USER})
-      dispatch({type:'RESET'})
+      dispatch({type:actionTypes.LOGOUT_USER})
     }
   };
 };

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-//import { Link } from 'react-router-dom';
 import {Row, Col , Pagination , PaginationItem , PaginationLink ,  Button , Modal , ModalBody, ModalFooter, ModalHeader , Card , CardBody, CardHeader, Table } from 'reactstrap';
 import instance from '../../../axios-config';
 import store from '../../../store';
+import { Redirect } from 'react-router';
 class SupervisorsTab extends Component {
   constructor(props){
     super(props);
@@ -39,7 +39,10 @@ class SupervisorsTab extends Component {
       paginateNextClass:'',
       paginatePrevClass:'',
       togglePaginationClass:'show-pagintaion',
-
+      profileRedirect:{
+        id:'',
+        redirect:false
+      },
     }
   }
 
@@ -176,11 +179,23 @@ class SupervisorsTab extends Component {
       tooltipOpen: newArray,
     });
   }
+  openProfilePage(event){
+    let idSupervisor = event.target.getAttribute('data-id');
+    let profileRedirect={
+      id:idSupervisor,
+      redirect:true
+    };
+    this.setState({profileRedirect:profileRedirect});
+    this.toggleProfileModal();
+  }
   componentDidMount(){
     this.fetchSupervisors(1,this.props.limit);
   }
   render() {
     let i =0;
+    if(this.state.profileRedirect.redirect){
+      return (<Redirect to={'/supervisors/'+this.state.profileRedirect.id}/>);
+    }
     return (
       <Card>
         <CardHeader>
@@ -279,7 +294,7 @@ class SupervisorsTab extends Component {
             </Row>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={()=>this.toggleProfileModal()}>Просмотреть профиль</Button>
+            <Button color="primary"data-id={this.state.profileInfos.id} onClick={(event)=>this.openProfilePage(event)}>Просмотреть профиль</Button>
             <Button color="danger" data-id={this.state.profileInfos.id} onClick={(event)=>this.openModal(event,'delete')}>Удалить</Button>
             <Button color="secondary" onClick={()=>this.toggleProfileModal()}>Отменить</Button>
           </ModalFooter>

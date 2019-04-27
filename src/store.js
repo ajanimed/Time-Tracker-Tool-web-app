@@ -1,30 +1,18 @@
-//import {createStore,applyMiddleware, compose} from 'redux';
 import {createStore} from 'redux';
 import authReducer from "./store/authReducer";
-//import { persistStore, persistReducer } from 'redux-persist';
-//mport ReduxThunk from 'redux-thunk';
-//mport reduxReset  from 'redux-reset';
-//import storage from 'redux-persist/lib/storage';
+import {saveState ,loadState} from './localStorage';
+import {throttle} from 'lodash';
+const persistedState = loadState();
+let store = createStore(authReducer,persistedState,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  );
 
-/*let persistConfig = {
-  key: 'root',
-  storage,
-};
+store.subscribe(throttle(() => {
+  saveState({
+    user: store.getState().user,
+    accessToken:store.getState().accessToken
+  });
+}, 1000));
 
-const enHanceCreateStore = compose(
-  applyMiddleware(ReduxThunk),
-  reduxReset()
-)(createStore);
-
-let persistedReducer = persistReducer(persistConfig, authReducer);
-
-let store = enHanceCreateStore(persistedReducer);
-let persistor = persistStore(store);
-
-let storee = {
-  store:store,
-  persistor:persistor
-};*/
-let store = createStore(authReducer);
 export default store;
 

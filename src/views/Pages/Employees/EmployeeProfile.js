@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import {Col,Row} from 'reactstrap';
 
 
-class Employees extends Component {
+class EmployeeProfile extends Component {
 
 
   render() {
@@ -12,7 +12,8 @@ class Employees extends Component {
       <div className="animated fadeIn">
         <Row>
           <Col xl={12}>
-            <h4>{this.props.match.params.id}</h4>
+            <h1>В разработке</h1>
+            <p>id : {this.props.match.params.id}</p>
           </Col>
         </Row>
       </div>
@@ -20,4 +21,4 @@ class Employees extends Component {
   }
 }
 
-export default Employees;
+export default EmployeeProfile;
